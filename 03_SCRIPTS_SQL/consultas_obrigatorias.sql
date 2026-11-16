@@ -51,17 +51,12 @@ ORDER BY total_vendido DESC;
 -- CONSULTA 4: MIN, MAX, LIMIT
 -- Top 5 produtos mais caros e mais baratos
 -- =====================================================
-SELECT 
-    nome_produto,
-    preco_venda,
-    CASE 
-        WHEN preco_venda = (SELECT MAX(preco_venda) FROM PRODUTO) THEN 'MAIS CARO'
-        WHEN preco_venda = (SELECT MIN(preco_venda) FROM PRODUTO) THEN 'MAIS BARATO'
-        ELSE 'INTERMEDIÁRIO'
-    END as classificacao
-FROM PRODUTO
-ORDER BY preco_venda DESC
-LIMIT 5;
+SELECT nome_produto, preco_venda, 'MAIS CARO' AS classificacao
+FROM (SELECT nome_produto, preco_venda FROM PRODUTO ORDER BY preco_venda DESC LIMIT 5)
+UNION ALL
+SELECT nome_produto, preco_venda, 'MAIS BARATO'
+FROM (SELECT nome_produto, preco_venda FROM PRODUTO ORDER BY preco_venda ASC LIMIT 5)
+ORDER BY preco_venda DESC;
 
 -- =====================================================
 -- CONSULTA 5: INNER JOIN (múltiplo), GROUP BY, SUM
